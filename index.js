@@ -6,16 +6,16 @@ const demoOptions = {
   devMode: true,
   tailFactor: 3
 };
-const worker = new Worker("worker.js");
 
 window.onload = function () {
   const canvas = document.getElementById("space");
   const offCanvas = canvas.transferControlToOffscreen?.();
   let hyperspace;
-  if (offCanvas) {
+  if (offCanvas && window.Worker) {
     console.log("Offscreen canvas supported");
     offCanvas.width = canvas.offsetWidth * (demoOptions.zoomFactor ?? 1);
     offCanvas.height = canvas.offsetHeight * (demoOptions.zoomFactor ?? 1);
+    const worker = new Worker("worker.js");
     worker.postMessage({ canvas: offCanvas, ...demoOptions }, [offCanvas]);
     new DemoController({ worker });
   } else {
