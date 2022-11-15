@@ -9,27 +9,107 @@
 </head>
 
 <body>
-    Hyperspace
     <canvas id="space"></canvas>
+    <main>
+        <div class="title">
+            <h1>
+                Hyperspace
+            </h1>
+            <p>Scroll down to enter hyperspace</p>
+        </div>
+        <footer>
+            <a href="https://github.com/Oriun/hyperspace">Source code</a>
+            <a href="https://github.com/Oriun">About me</a>
+        </footer>
+    </main>
 </body>
-<script src="worker.js"></script>
+<script src="classes/utils.js"></script>
+<script src="classes/star.js"></script>
+<script src="classes/hyperspace.js"></script>
 <script src="index.js"></script>
 <style>
     body {
         margin: 0;
         padding: 0;
         background: #000;
-        height: 100vh;
+        height: 500vh;
         width: 100vw;
     }
 
     #space {
         width: 100%;
         height: 100%;
-        position: absolute;
+        position: fixed;
         inset: 0;
         background-color: black;
+        z-index: 1;
+    }
+
+    main {
+        position: fixed;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        font-family: sans-serif;
+    }
+
+    .title {
+        padding: 64px;
+        /* border: 1px solid red; */
+        background: radial-gradient(#0008, #0000 70%);
+        color: white;
+        text-align: center;
+    }
+
+    .title h1 {
+        font-size: 5rem;
+        margin: 0;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        justify-items: center;
+    }
+
+    footer a {
+        color: white;
+        text-underline-offset: 4px;
+        padding: 20px;
+    }
+
+    @media (max-width: 500px) {
+        .title h1 {
+            font-size: 3rem;
+        }
     }
 </style>
+<script>
+    window.onload = function () {
+        const canvas = document.getElementById("space");
+        const hyperspace = new HyperSpace(canvas, {
+            zoomFactor: 1,
+            speedFactor: 1,
+            starCount: 90,
+            backgroundColor: "rgb(15, 21, 36)",
+            tailFactor: 3,
+            colors: ["white", "white", "#cccccc", "lightgray", "#ccffff", "#c0ffff"]
+        });
+        const startSpeed = hyperspace.speedFactor
+        const starSpeedRatio = 90 / startSpeed
+        window.onscroll = function () {
+            hyperspace.speedFactor = Math.max(startSpeed, (window.scrollY / 100) ** 3);
+            hyperspace.starCount = hyperspace.speedFactor * starSpeedRatio;
+        }
+    };
+</script>
 
 </html>
